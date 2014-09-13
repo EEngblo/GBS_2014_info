@@ -6,8 +6,14 @@ void main(){
 	int a, b, c, d;
 	cin >> a >> b >> c >> d;
 
-	if ((a < c && c < b && a < d && d < b) || (a > c && c > b && a > d && d > b))
-		 cout << "Not Cross" << endl;
-	else cout << "Cross" << endl;
-	
+	if (a > b){
+		int tmp = a;
+		a = b;
+		b = a;
+	}
+
+	if ((a < c && c < b)^(a < d && d < b))
+		cout << "Cross" << endl;
+	else cout << "Not Cross" << endl;
+
 }
