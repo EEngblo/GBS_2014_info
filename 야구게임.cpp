@@ -1,41 +1,67 @@
 #include <iostream>
+#include <cstdio>
+#include <stdlib.h>
 #include <time.h>
+#include <string.h>
+
 using namespace std;
 
-#define debug 0
+#define debug 1
 
 class Baseball{
 private:
-	int count_answer, strike, ball, cnt;
-	char *answer, *correct_answer;
+	int count_answer, strike, ball, cnt, check_endgame;
+	char *answer, *correct_answer, endgame;
 
 	void play_ball(){
-		// Á¤´ä ¹è¿­¿¡ ·£´ıÇÑ 0~9 »çÀÌÀÇ ¼ö count_answer°³ ÀúÀå
+		// ì •ë‹µ ë°°ì—´ì— ëœë¤í•œ 0~9 ì‚¬ì´ì˜ ìˆ˜ count_answerê°œ ì €ì¥
 		srand(time(0));
+		this->cnt = 0;
+		
 		for (int i = 0; i < count_answer; i++)	correct_answer[i] = (rand() % 10) + '0';
 
-		if (debug) cout << "´ä : " << correct_answer << endl; // µğ¹ö±ë ¸ğµåÀÏ ¶§¿¡´Â ´äÀ» Ç¥½ÃÇÔ
-		this->strike = 0; // ½ºÆ®¶óÀÌÅ© ÃÊ±âÈ­
+		if (debug) cout << "ì •ë‹µ : " << correct_answer << endl; // ë””ë²„ê¹… ëª¨ë“œì¼ ë•Œì—ëŠ” ë‹µì„ í‘œì‹œí•¨
+		this->strike = 0; // ìŠ¤íŠ¸ë¼ì´í¬ ì´ˆê¸°í™”
 
-		// ½ºÆ®¶óÀÌÅ© ¼ö°¡ count_answer °³°¡ µÉ ¶§ ±îÁö °è¼Ó ·çÇÁ¸¦ µº
-		while ( (this->strike) < (this->count_answer) ){ 
-			while (gets_answer()); // ´ä3°³°¡ Á¤»óÀûÀ¸·Î ÀÔ·ÂµÉ ¶§ ±îÁö °è¼Ó ÀÔ·Â¹ŞÀ½
-			check_ballcount(); // ÀÔ·Â¹ŞÀº ´äÀ» Á¤´ä°ú ºñ±³ÇÔ
-			print_state(); // À§ ÁÙÀÇ °á°ú¸¦ Ãâ·ÂÇØ ÁÜ
+		// ìŠ¤íŠ¸ë¼ì´í¬ ìˆ˜ê°€ count_answer ê°œê°€ ë  ë•Œ ê¹Œì§€ ê³„ì† ë£¨í”„ë¥¼ ë
+		while ((this->strike) < (this->count_answer)){
+			while (gets_answer()); // ë‹µ3ê°œê°€ ì •ìƒì ìœ¼ë¡œ ì…ë ¥ë  ë•Œ ê¹Œì§€ ê³„ì† ì…ë ¥ë°›ìŒ
+			check_ballcount(); // ì…ë ¥ë°›ì€ ë‹µì„ ì •ë‹µê³¼ ë¹„êµí•¨
+			print_state(); // ìœ„ ì¤„ì˜ ê²°ê³¼ë¥¼ ì¶œë ¥í•´ ì¤Œ
 		}
-		cout << cnt << "¹ø ¸¸¿¡ ¸ÂÃß¼Ì½À´Ï´Ù!" << endl;
+		cout << cnt << "ë²ˆ ë§Œì— ë§ì¶”ì…¨ìŠµë‹ˆë‹¤!" << endl << endl << "ì¬ê²½ê¸°ëŠ” r, ì¢…ë£ŒëŠ” xë¥¼ ëˆŒëŸ¬ì£¼ì„¸ìš”" << endl;
+		
+		//while (gets_endgame());
+		//if(this->check_endgame == 1) play_ball();
+		//else
+		 return;
 	}
-
-	int gets_answer()	{
+	
+	int gets_endgame(){
+		cout << "ì…ë ¥ : ";
+		cin >> this->endgame;
+		fflush(stdin);
+		if(this->endgame == 'r') {
+			this->check_endgame = 1;
+			return 1;
+		}
+		else if(this->endgame == 'x'){
+			this->check_endgame = -1;	
+			return -1;
+		}
+		else return 0;		
+	}
+	
+	int gets_answer(){
 		char buffer[100];
-		cout << "ÀÔ·Â : ";
-		cin >> buffer; // ÀÔ·Â¹ŞÀº µÚ ¸ÕÀú ¹öÆÛ ¹è¿­¿¡ ÀúÀåÇÔ
-		fflush(stdin); // ÀÔ·ÂÀÌ ³¡³µÀ½À» ÀÇ¹ÌÇÏ´Â ¿£ÅÍ°¡ ÀúÀåµÇÁö ¾Êµµ·Ï ÇÔ
-		memcpy(this->answer, buffer, this->count_answer); // ÀÔ·Â µ¥ÀÌÅÍ Áß count_answer°³¸¸ ´ä ¹è¿­¿¡ º¹»çÇÔ 
-		// ÀÔ·Â¹ŞÀº µ¥ÀÌÅÍµéÀÌ 0~9 »çÀÌÀÇ ¼ıÀÚÀÎÁö¸¦ Ã¼Å©
+		cout << "ë‹µ : ";
+		cin >> buffer; // ì…ë ¥ë°›ì€ ë’¤ ë¨¼ì € ë²„í¼ ë°°ì—´ì— ì €ì¥í•¨
+		fflush(stdin); // ì…ë ¥ì´ ëë‚¬ìŒì„ ì˜ë¯¸í•˜ëŠ” ì—”í„°ê°€ ì €ì¥ë˜ì§€ ì•Šë„ë¡ í•¨
+		memcpy(this->answer, buffer, this->count_answer); // ì…ë ¥ ë°ì´í„° ì¤‘ count_answerê°œë§Œ ë‹µ ë°°ì—´ì— ë³µì‚¬í•¨ 
+		// ì…ë ¥ë°›ì€ ë°ì´í„°ë“¤ì´ 0~9 ì‚¬ì´ì˜ ìˆ«ìì¸ì§€ë¥¼ ì²´í¬
 		for (int i = 0; i < this->count_answer; i++)
 			if (this->answer[i] < '0' || this->answer[i] > '9') return -1;
-		return 0; // ¸ÂÀ¸¸é 0À» ¸®ÅÏÇØ ¹«ÇÑ·çÇÁ¸¦ Å»ÃâÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+		return 0; // ë§ìœ¼ë©´ 0ì„ ë¦¬í„´í•´ ë¬´í•œë£¨í”„ë¥¼ íƒˆì¶œí•  ìˆ˜ ìˆë„ë¡ í•¨
 	}
 
 	void print_state(){
@@ -44,48 +70,47 @@ private:
 		char b[] = "Ball";
 		char bb[] = "Balls";
 		char bbb[10], sss[10];
-		if (strike <= 1) strcpy_s(sss, s); // ½ºÆ®¶óÀÌÅ© ¼ö°¡ 0,1°³¸é ´Ü¼öÇü
-		else strcpy_s(sss, ss); // ½ºÆ®¶óÀÌÅ© ¼ö°¡ 2°³ ÀÌ»óÀÌ¸é º¹¼öÇü
+		if (this->strike <= 1) strcpy(sss, s); // ìŠ¤íŠ¸ë¼ì´í¬ ìˆ˜ê°€ 0,1ê°œë©´ ë‹¨ìˆ˜í˜•
+		else strcpy(sss, ss); // ìŠ¤íŠ¸ë¼ì´í¬ ìˆ˜ê°€ 2ê°œ ì´ìƒì´ë©´ ë³µìˆ˜í˜•
 
-		if (ball <= 1) strcpy_s(bbb,b); // º¼ ¼ö°¡ 0,1°³¸é ´Ü¼öÇü
-		else strcpy_s(bbb,bb); // º¼ ¼ö°¡ 2°³ ÀÌ»óÀÌ¸é º¹¼öÇü
+		if (this->ball <= 1) strcpy(bbb, b); // ë³¼ ìˆ˜ê°€ 0,1ê°œë©´ ë‹¨ìˆ˜í˜•
+		else strcpy(bbb, bb); // ë³¼ ìˆ˜ê°€ 2ê°œ ì´ìƒì´ë©´ ë³µìˆ˜í˜•
 
-		cout << strike << sss << "  " << ball << bbb << endl; // º¼Ä«¿îÆ® Ãâ·Â
+		cout << strike << sss << "  " << ball << bbb << endl; // ë³¼ì¹´ìš´íŠ¸ ì¶œë ¥
 
 	}
 
 	void check_ballcount(){
 		this->cnt++;
-		this->strike = this->ball = 0; // º¼, ½ºÆ®¶óÀÌÅ© ¼ö¸¦ 0À¸·Î ÃÊ±âÈ­ÇÔ
+		this->strike = this->ball = 0; // ë³¼, ìŠ¤íŠ¸ë¼ì´í¬ ìˆ˜ë¥¼ 0ìœ¼ë¡œ ì´ˆê¸°í™”í•¨
 		for (int i = 0; i < this->count_answer; i++){
 			for (int j = 0; j < this->count_answer; j++){
-				if (correct_answer[i] - answer[j] == 0){ // Á¤´ä ¹è¿­ Áß ÇÏ³ª¿Í ´ä ¹è¿­ Áß ÇÏ³ªÀÇ °ªÀÌ °°À» ¶§,
-					if (i - j) this->ball++;			 // Á¤´ä ¹è¿­¿¡¼­ÀÇ À§Ä¡¿Í ´ä ¹è¿­¿¡¼­ÀÇ À§Ä¡°¡ °°À¸¸é º¼++,
-					else this->strike++;                 // Á¤´ä ¹è¿­¿¡¼­ÀÇ À§Ä¡¿Í ´ä ¹è¿­¿¡¼­ÀÇ À§Ä¡°¡ °°À¸¸é ½ºÆ®¶óÀÌÅ©++
+				if (correct_answer[i] - answer[j] == 0){ // ì •ë‹µ ë°°ì—´ ì¤‘ í•˜ë‚˜ì™€ ë‹µ ë°°ì—´ ì¤‘ í•˜ë‚˜ì˜ ê°’ì´ ê°™ì„ ë•Œ,
+					if (i - j) this->ball++;			 // ì •ë‹µ ë°°ì—´ì—ì„œì˜ ìœ„ì¹˜ì™€ ë‹µ ë°°ì—´ì—ì„œì˜ ìœ„ì¹˜ê°€ ê°™ìœ¼ë©´ ë³¼++,
+					else this->strike++;                 // ì •ë‹µ ë°°ì—´ì—ì„œì˜ ìœ„ì¹˜ì™€ ë‹µ ë°°ì—´ì—ì„œì˜ ìœ„ì¹˜ê°€ ê°™ìœ¼ë©´ ìŠ¤íŠ¸ë¼ì´í¬++
 				}
 			}
 		}
 	}
 
 public:
-	Baseball() { //Å¬·¡½º »ı¼ºÀÚ
-		count_answer = 3; // ´äÀ» 3°³ ¹Ş¾Æ¿Â´Ù
-		answer = new char[count_answer]; // ´ä ¹è¿­ µ¿ÀûÇÒ´ç
-		correct_answer = new char[count_answer]; // Á¤´ä ¹è¿­ µ¿ÀûÇÒ´ç
+	Baseball() { //í´ë˜ìŠ¤ ìƒì„±ì
+		count_answer = 3; // ë‹µì„ 3ê°œ ë°›ì•„ì˜¨ë‹¤
+		answer = new char[count_answer]; // ë‹µ ë°°ì—´ ë™ì í• ë‹¹
+		correct_answer = new char[count_answer]; // ì •ë‹µ ë°°ì—´ ë™ì í• ë‹¹
 	}
 
-	~Baseball() { //Å¬·¡½º ¼Ò¸êÀÚ
-		free(answer); // ´ä ¹è¿­À» ¸Ş¸ğ¸®¿¡¼­ ÇØÁ¦ÇÑ´Ù
-		free(correct_answer); // Á¤´ä ¹è¿­À» ¸Ş¸ğ¸®¿¡¼­ ÇØÁ¦ÇÑ´Ù
+	~Baseball() { //í´ë˜ìŠ¤ ì†Œë©¸ì
+		free(answer); // ë‹µ ë°°ì—´ì„ ë©”ëª¨ë¦¬ì—ì„œ í•´ì œí•œë‹¤
+		free(correct_answer); // ì •ë‹µ ë°°ì—´ì„ ë©”ëª¨ë¦¬ì—ì„œ í•´ì œí•œë‹¤
 	}
 
-	void start() { play_ball(); }; // play_ball ÇÔ¼ö È£Ãâ
+	void start() { play_ball(); }; // play_ball í•¨ìˆ˜ í˜¸ì¶œ
 };
 
 
-int main()
-{
-	Baseball Baseball;
-	Baseball.start();
+int main(){
+	Baseball Baseball; // Baseball í´ë˜ìŠ¤ ìƒì„±
+	Baseball.start(); // Baseball í´ë˜ìŠ¤ì˜ start í•¨ìˆ˜ í˜¸ì¶œ
 	return 0;
 }
