@@ -3,7 +3,7 @@ using namespace std;
 
 
 int main(){
-	int arr[20][20] = {};
+	int arr[21][21] = {};
 	int n, x, y;
 
 	for (int i = 1; i < 20; i++)
@@ -14,8 +14,10 @@ int main(){
 	cin >> n;
 
 	for (int i = 0; i < n; i++){
-		cin >> x >> y;
-
+		cin >> y >> x;
+		if (arr[x][y]) arr[x][y] = 0;
+			else arr[x][y] = 1;
+		
 		for (int j = 1; j < 20; j++){
 			if (arr[x][j]) arr[x][j] = 0;
 			else arr[x][j] = 1;
@@ -27,8 +29,8 @@ int main(){
 		}
 	}
 
-	for (int i = 0; i < 20; i++){
-		for (int j = 0; j < 20; j++)
+	for (int i = 1; i < 20; i++){
+		for (int j = 1; j < 20; j++)
 			cout << arr[i][j] << " ";
 		cout << endl;
 	}
