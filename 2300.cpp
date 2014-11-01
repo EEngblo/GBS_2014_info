@@ -1,23 +1,17 @@
 #include <iostream>
 using namespace std;
 
-int arr[10][10];
-int x = 1, y = 1;
-
-int moveright();
-void movedown();
-
 int main(){
-	int n, a = 5, b = 6, k = 0;
+	int n, a = 5, k = 0;
 	cin >> n;
 
-	while (a < n && a > 0){
+	while (a <= n){
 		k += n / a;
-		k -= n / (a*b);
+		k -= n / (a*6);
 		a *= 5;
 	}
-
-	cout << k;
+	
+	cout << k << endl;
 
 	return 0;
 } // 501
